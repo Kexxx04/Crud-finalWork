@@ -2,8 +2,8 @@
 
 ## Información General
 
-- **Nombre del Proyecto:** Sistema de Gestión de Usuarios (CRUD + Autenticación JWT)  
-- **Autores:** Jaider Ríos Franco, Keith Smith Balaguera
+**Nombre del Proyecto:** Sistema de Gestión de Usuarios (CRUD + Autenticación JWT)  
+**Autores:** Jaider Ríos Franco, Keith Smith Balaguera
 
 ## Tecnologías
 
@@ -12,49 +12,42 @@
 - **Base de Datos:** PostgreSQL  
 - **Autenticación:** JSON Web Tokens (JWT)
 
----
-
-## 🎯 Objetivo
+## Objetivo
 
 Diseñar e implementar una aplicación web que permita:
 
-- Registrar, consultar, editar y eliminar usuarios.
-- Autenticar y autorizar accesos mediante tokens JWT.
-- Garantizar una navegación segura y protegida por sesión.
+- Registrar, consultar, editar y eliminar usuarios  
+- Autenticar y autorizar accesos mediante tokens JWT  
+- Garantizar una navegación segura y protegida por sesión
 
----
-
-## 🔧 Funcionalidades
+## Funcionalidades
 
 ### CRUD
 
-- **Crear usuario:** Formulario con validación.
-- **Listar usuarios:** Lista con botones de acción.
-- **Editar usuario:** Formulario editable.
-- **Eliminar usuario:** Acción con confirmación.
+- **Crear usuario:** Formulario con validación  
+- **Listar usuarios:** Lista con botones de acción  
+- **Editar usuario:** Formulario editable  
+- **Eliminar usuario:** Acción con confirmación
 
 ### Autenticación y Seguridad
 
-- Registro con validación.
-- Login con email y password.
-- Protección de rutas mediante token JWT.
-- Persistencia de sesión.
-- Cierre de sesión con protección del botón "atrás".
+- Registro con validación  
+- Login con email y password  
+- Protección de rutas mediante token JWT  
+- Persistencia de sesión  
+- Cierre de sesión con protección del botón "atrás"
 
----
+## Requisitos No Funcionales
 
-## ✅ Requisitos No Funcionales
+- **Rendimiento:** Respuestas rápidas (<300ms)  
+- **Seguridad:** Tokens con expiración y contraseñas cifradas  
+- **Usabilidad:** Interfaz clara y responsiva  
+- **Escalabilidad:** Capacidad de crecimiento a módulos como roles  
+- **Mantenibilidad:** Código limpio y modular
 
-- **Rendimiento:** Respuestas rápidas (<300ms).
-- **Seguridad:** Tokens con expiración y contraseñas cifradas.
-- **Usabilidad:** Interfaz clara y responsiva.
-- **Escalabilidad:** Capacidad de crecimiento a módulos como roles.
-- **Mantenibilidad:** Código limpio y modular.
+## Arquitectura de Carpetas
 
----
-
-## 📁 Arquitectura de Carpetas
-
+```
 /backend
 ├── controllers/
 ├── routes/
@@ -65,43 +58,66 @@ Diseñar e implementar una aplicación web que permita:
 
 /client
 ├── src/
-│ ├── components/
-│ ├── Navbar.js
-│ └── App.js
+│   ├── components/
+│   ├── Navbar.js
+│   └── App.js
 ├── .env
 └── package.json
+```
 
-yaml
-Copiar
-Editar
+## Instalación y Ejecución
 
----
+### Inicialización del proyecto
 
-## ⚙ Instalación y Ejecución
+```bash
+npm init -y
+```
 
-### Backend
+### Instalación de paquetes del backend
+
+```bash
+npm i express morgan cors
+```
+
+### Instalación de nodemon para desarrollo
+
+```bash
+npm i nodemon -D
+```
+
+### Dependencias adicionales
+
+```bash
+npm install pg bcrypt jsonwebtoken
+```
+
+### Pruebas unitarias
+
+```bash
+npm install --save-dev jest supertest
+```
+
+### Ejecutar Backend
 
 ```bash
 cd backend
-npm init -y
-npm i express morgan cors
-npm i nodemon -D
-npm install pg bcrypt jsonwebtoken
-npm install --save-dev jest supertest
+npm install
 node src/index.js
-Frontend
-bash
-Copiar
-Editar
+```
+
+### Ejecutar Frontend
+
+```bash
 cd client
 npm install
 npm start
-🔐 Variables de Entorno
-Archivo .env para el backend:
+```
 
-ini
-Copiar
-Editar
+## Variables de Entorno
+
+**Archivo `.env` para el backend:**
+
+```ini
 PORT=4000
 DB_HOST=localhost
 DB_PORT=5432
@@ -109,122 +125,123 @@ DB_USER=postgres
 DB_PASSWORD=tu_contraseña
 DB_DATABASE=usersdb
 JWT_SECRET=QxB93$kd!A23Df1s7P
-🌐 Endpoints API
-Método	Endpoint	Descripción
-POST	/api/users	Crear usuario
-POST	/api/users/login	Login
-GET	/api/users	Obtener todos los usuarios
-GET	/api/users/:id	Obtener usuario por ID
-PUT	/api/users/:id	Actualizar usuario
-DELETE	/api/users/:id	Eliminar usuario
+```
 
-🛡 Seguridad y Sesión
-Token JWT incluido en el Authorization Header.
+## Endpoints API
 
-Middleware en el backend para verificar tokens.
+| Método | Endpoint           | Descripción                  |
+|--------|--------------------|------------------------------|
+| POST   | /api/users         | Crear usuario                |
+| POST   | /api/users/login   | Login                        |
+| GET    | /api/users         | Obtener todos los usuarios   |
+| GET    | /api/users/:id     | Obtener usuario por ID       |
+| PUT    | /api/users/:id     | Actualizar usuario           |
+| DELETE | /api/users/:id     | Eliminar usuario             |
 
-El frontend guarda el token y usuario en localStorage.
+## Seguridad y Sesión
 
-Logout elimina el token y redirige al login.
+- Token JWT incluido en el Authorization Header  
+- Middleware en el backend para verificar tokens  
+- El frontend guarda el token y usuario en `localStorage`  
+- Logout elimina el token y redirige al login  
+- Protección de navegación hacia atrás con `popstate`
 
-Protección de navegación hacia atrás con popstate.
+## Casos de Uso
 
-💡 Casos de Uso
-CU1: Registrar usuario
+- **CU1:** Registrar usuario  
+- **CU2:** Iniciar sesión  
+- **CU3:** Listar usuarios  
+- **CU4:** Editar usuario  
+- **CU5:** Eliminar usuario  
+- **CU6:** Cerrar sesión y proteger navegación
 
-CU2: Iniciar sesión
+## Consideraciones Finales
 
-CU3: Listar usuarios
+- Se permiten nombres repetidos, pero los correos deben ser únicos  
+- Las contraseñas se cifran con bcrypt  
+- La navegación hacia atrás está protegida tras cerrar sesión  
+- Ideal para ampliarse con roles o un dashboard administrativo
 
-CU4: Editar usuario
+---
 
-CU5: Eliminar usuario
+## Pruebas Unitarias
 
-CU6: Cerrar sesión y proteger navegación
+Este documento describe las pruebas unitarias realizadas para el backend del proyecto CRUD, utilizando **Jest** y **Supertest**.
 
-📝 Consideraciones Finales
-Se permiten nombres repetidos, pero los correos deben ser únicos.
+### Herramientas Utilizadas
 
-Las contraseñas se cifran con bcrypt.
+- Jest: Framework de pruebas para JavaScript  
+- Supertest: Librería para pruebas HTTP en endpoints Express  
+- Node.js y Express: Entorno y framework de servidor
 
-La navegación hacia atrás está protegida tras cerrar sesión.
+### Estructura de las Pruebas
 
-Ideal para ampliarse con roles o un dashboard administrativo.
+Las pruebas están ubicadas en `src/tests/`:
 
-🧪 Pruebas Unitarias
-Herramientas Utilizadas
-Jest: Framework de pruebas para JavaScript.
+- `user.routes.test.js`  
+- `login.test.js`  
+- `deleteUser.test.js`
 
-Supertest: Librería para pruebas HTTP en Express.
+### Prueba 1: Registro de Usuario
 
-Node.js y Express: Entorno y framework de servidor.
+**Archivo:** `user.routes.test.js`  
+**Objetivo:** Verificar que un nuevo usuario pueda registrarse correctamente
 
-Estructura de las Pruebas
-Ubicadas en src/tests/:
+**Casos probados:**
 
-user.routes.test.js
+- ✔ Registro exitoso con correo único  
+- ✔ Registro fallido con correo ya existente
 
-login.test.js
+### Prueba 2: Inicio de Sesión
 
-deleteUser.test.js
+**Archivo:** `login.test.js`  
+**Objetivo:** Verificar login válido y manejo de credenciales incorrectas
 
-✔ Prueba 1: Registro de Usuario
-Archivo: user.routes.test.js
-Objetivo: Verificar que un nuevo usuario pueda registrarse correctamente.
+**Casos probados:**
 
-Casos:
+- ✔ Login exitoso con credenciales correctas  
+- ✔ Login fallido con contraseña incorrecta
 
-✔ Registro exitoso con correo único.
+### Prueba 3: Eliminación de Usuario
 
-✔ Registro fallido con correo ya existente.
+**Archivo:** `deleteUser.test.js`  
+**Objetivo:** Asegurar que un usuario puede ser eliminado por ID
 
-✔ Prueba 2: Inicio de Sesión
-Archivo: login.test.js
-Objetivo: Verificar login válido y manejo de credenciales incorrectas.
+**Casos probados:**
 
-Casos:
+- ✔ Eliminación exitosa con ID válido  
+- ✔ Eliminación fallida con ID inválido
 
-✔ Login exitoso con credenciales correctas.
+### Resultados de las Pruebas
 
-✔ Login fallido con contraseña incorrecta.
+- ✅ 3 Test Suites ejecutados exitosamente  
+- ✅ 6 Tests pasaron sin errores  
+- ⏱ Tiempo total de ejecución: ~2.5 segundos
 
-✔ Prueba 3: Eliminación de Usuario
-Archivo: deleteUser.test.js
-Objetivo: Asegurar que un usuario puede ser eliminado por ID.
+---
 
-Casos:
+## Configuración de la Base de Datos
 
-✔ Eliminación exitosa con ID válido.
+**Crear la base de datos y tabla de usuarios:**
 
-✔ Eliminación fallida con ID inválido.
-
-📊 Resultados
-✅ 3 Test Suites ejecutados exitosamente
-
-✅ 6 Tests pasaron sin errores
-
-⏱ Tiempo total de ejecución: ~2.5 segundos
-
-🛠 Configuración de la Base de Datos
-Script SQL
-sql
-Copiar
-Editar
+```sql
 CREATE DATABASE usersdb;
 
 CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100),
-  email VARCHAR(100) UNIQUE,
-  password VARCHAR(100)
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(100) UNIQUE
 );
-🔑 Variables de Entorno de Base de Datos
-ini
-Copiar
-Editar
+```
+
+**Variables de entorno asociadas:**
+
+```ini
 DB_HOST=localhost
 DB_PORT=5432
 DB_USER=postgres
 DB_PASSWORD=tu_contraseña
 DB_DATABASE=usersdb
 JWT_SECRET=QxB93$kd!A23Df1s7P
+```
