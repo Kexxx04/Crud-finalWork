@@ -17,17 +17,20 @@ export default function UserEdit() {
     email: '',
     password: '',
   });
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { id } = useParams();
 
-  // Cargar datos del usuario sin mostrar la contraseña
+  const [loading, setLoading] = useState(false);
+  const [successMessages, setSuccessMessages] = useState([]);
+  const [error, setError] = useState(null);
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const res = await fetch(`http://localhost:4000/users/${id}`);
+        const res = await fetch(`http://localhost:4000/api/users/${id}`);
         const data = await res.json();
-        setUser({ name: data.name, email: data.email, password: '' }); // ¡No mostrar la contraseña hasheada!
+        setUser({ name: data.name, email: data.email, password: '' });
       } catch (error) {
         console.error("Error al cargar el usuario:", error);
       }
@@ -43,20 +46,19 @@ export default function UserEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
-    // Clonamos el objeto
     const userToUpdate = {
       name: user.name,
-      email: user.email
+      email: user.email,
     };
 
-    // Solo enviamos la contraseña si se digitó
     if (user.password.trim() !== '') {
       userToUpdate.password = user.password;
     }
 
     try {
-      const res = await fetch(`http://localhost:4000/users/${id}`, {
+      const res = await fetch(`http://localhost:4000/api/users/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -65,13 +67,34 @@ export default function UserEdit() {
       });
 
       const data = await res.json();
+      console.log("🔵 Respuesta del backend:", data);
 
-      // Asegúrate que el backend esté devolviendo { user: {...} }
-      localStorage.setItem("user", JSON.stringify(data.user));
+      if (!res.ok) {
+        setLoading(false);
+        setError(data.message || "Error al actualizar");
+        return;
+      }
+
+      if (Array.isArray(data.mensajes)) {
+        setSuccessMessages(data.mensajes);
+        setTimeout(() => {
+          navigate('/User/List');
+        }, 3000);
+      } else {
+        console.warn("⚠️ El backend no devolvió 'mensajes' como array:", data.mensajes);
+        setSuccessMessages(["Usuario actualizado."]);
+      }
+
+      const currentUser = JSON.parse(localStorage.getItem("user"));
+      if (currentUser && currentUser.id === data.user.id) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
+
       setLoading(false);
-      navigate('/User/List');
+
     } catch (error) {
       console.error("Error al actualizar:", error);
+      setError("Error del servidor");
       setLoading(false);
     }
   };
@@ -95,52 +118,72 @@ export default function UserEdit() {
           <Typography variant="h5" textAlign="center" color="white">
             Edit User
           </Typography>
+
           <CardContent>
             <form onSubmit={handleSubmit}>
+              {successMessages.length > 0 && (
+                <div style={{ marginBottom: '1rem' }}>
+                  {successMessages.map((msg, index) => (
+                    <Typography key={index} color="success.main">
+                      ✅ {msg}
+                    </Typography>
+                  ))}
+                </div>
+              )}
+
+              {error && (
+                <Typography color="error" sx={{ mt: 2 }}>
+                  ❌ {error}
+                </Typography>
+              )}
+
               <TextField
                 variant="filled"
                 label="Edit your name"
                 fullWidth
                 sx={{ margin: '.5rem 0' }}
-                name='name'
+                name="name"
                 value={user.name}
                 onChange={handleChange}
                 inputProps={{ style: { color: "white" } }}
                 InputLabelProps={{ style: { color: "white" } }}
               />
+
               <TextField
                 variant="filled"
                 label="Edit your email"
                 fullWidth
                 sx={{ margin: '.5rem 0' }}
-                name='email'
+                name="email"
                 value={user.email}
                 onChange={handleChange}
                 inputProps={{ style: { color: "white" } }}
                 InputLabelProps={{ style: { color: "white" } }}
               />
+
               <TextField
                 variant="filled"
                 label="New password (optional)"
                 fullWidth
                 sx={{ margin: '.5rem 0' }}
-                name='password'
+                name="password"
+                type="password"
                 value={user.password}
                 onChange={handleChange}
-                type="password"
                 placeholder="Leave blank to keep current password"
                 inputProps={{ style: { color: "white" } }}
                 InputLabelProps={{ style: { color: "white" } }}
               />
+
               <Button
                 variant="contained"
                 color="secondary"
                 type="submit"
                 fullWidth
-                disabled={!user.name || !user.email} 
+                disabled={!user.name || !user.email}
               >
                 {loading ? (
-                  <CircularProgress color='inherit' size={24} />
+                  <CircularProgress color="inherit" size={24} />
                 ) : (
                   'Update'
                 )}

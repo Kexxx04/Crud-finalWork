@@ -20,7 +20,7 @@ export default function UserForm() {
     setError(null); // limpiar errores anteriores
 
     try {
-      const res = await fetch('http://localhost:4000/users', {
+      const res = await fetch('http://localhost:4000/api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

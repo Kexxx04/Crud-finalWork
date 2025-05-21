@@ -1,29 +1,41 @@
-import { Grid, Typography, Card, CardContent, TextField, Button, CircularProgress } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  CircularProgress
+} from '@mui/material';
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function LogIn() {
-
   const [user, setUser] = useState({
     email: '',
     password: '',
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null); 
+    setError(null);
 
     try {
-      const res = await fetch('http://localhost:4000/users/login', {
-        method: "POST",
+      const res = await fetch('http://localhost:4000/api/users/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(user),
       });
@@ -32,23 +44,20 @@ export default function LogIn() {
       setLoading(false);
 
       if (!res.ok) {
-        setError(data.message || "Login failed");
+        setError(data.message || 'Login failed');
         return;
       }
 
       // Login exitoso
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       navigate('/User/List');
 
     } catch (error) {
       setLoading(false);
-      setError("Error de conexión con el servidor.");
+      setError('Error de conexión con el servidor.');
       console.error(error);
     }
-  };
-
-  const handleChange = e => {
-    setUser({ ...user, [e.target.name]: e.target.value });
   };
 
   return (
@@ -64,40 +73,49 @@ export default function LogIn() {
           sx={{
             mt: 5,
             backgroundColor: '#1e272e',
-            padding: '1rem'
+            padding: '1rem',
           }}
         >
-          <Typography variant="h5" textAlign="center" color="white">
+          <Typography
+            variant="h5"
+            textAlign="center"
+            color="white"
+            gutterBottom
+          >
             Log in
           </Typography>
+
           <CardContent>
             <form onSubmit={handleSubmit}>
               <TextField
                 variant="filled"
                 type="email"
                 label="Write your email"
+                name="email"
+                value={user.email}
+                onChange={handleChange}
                 fullWidth
                 sx={{ margin: '.5rem 0' }}
-                name='email'
-                onChange={handleChange}
-                inputProps={{ style: { color: "white" } }}
-                InputLabelProps={{ style: { color: "white" } }}
+                inputProps={{ style: { color: 'white' } }}
+                InputLabelProps={{ style: { color: 'white' } }}
               />
+
               <TextField
                 variant="filled"
-                label="Write your password"
                 type="password"
+                label="Write your password"
+                name="password"
+                value={user.password}
+                onChange={handleChange}
                 fullWidth
                 sx={{ margin: '.5rem 0' }}
-                name='password'
-                onChange={handleChange}
-                inputProps={{ style: { color: "white" } }}
-                InputLabelProps={{ style: { color: "white" } }}
+                inputProps={{ style: { color: 'white' } }}
+                InputLabelProps={{ style: { color: 'white' } }}
               />
 
               {error && (
                 <Typography color="error" sx={{ mt: 2 }}>
-                  {error}
+                  ❌ {error}
                 </Typography>
               )}
 
@@ -107,8 +125,13 @@ export default function LogIn() {
                 type="submit"
                 fullWidth
                 disabled={!user.email || !user.password || loading}
+                sx={{ mt: 2 }}
               >
-                {loading ? <CircularProgress color='inherit' size={24} /> : 'Log in'}
+                {loading ? (
+                  <CircularProgress color="inherit" size={24} />
+                ) : (
+                  'Log in'
+                )}
               </Button>
             </form>
           </CardContent>

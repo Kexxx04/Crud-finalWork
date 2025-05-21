@@ -1,24 +1,31 @@
 import { AppBar, Box, Button, Container, Toolbar, Typography } from "@mui/material";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Manejo seguro del localStorage
+  // Recuperar datos del usuario y token
   let user = null;
-  try {
-  const raw = localStorage.getItem("user");
-  if (raw && raw !== "undefined") {
-    user = JSON.parse(raw);
-  }
-  } catch (e) {
-  console.error("Error parsing user from localStorage:", e);
-  }
+  
 
+  try {
+    const rawUser = localStorage.getItem("user");
+    
+
+    if (rawUser && rawUser !== "undefined") {
+      user = JSON.parse(rawUser);
+    }
+
+    
+  } catch (e) {
+    console.error("Error leyendo localStorage:", e);
+  }
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
+    
     navigate("/User/LogIn");
   };
 
@@ -44,7 +51,7 @@ export default function Navbar() {
               </Button>
             )}
 
-            {user ? (
+            {user  ? (
               <Button
                 variant="contained"
                 color="error"
